@@ -23,6 +23,8 @@ task.deploy = (ukraine_ip, app_dir, cfg) ->
     # .pipe(zlib.Gzip())
     # .pipe(fstream.Writer({ 'path': 'app.tgz', 'type': 'File' }))
 
+    app_dir = path.resolve(app_dir)
+    
     # Read the app's `package.json` file.
     return Q.fcall( ->
         winston.debug 'Attempting to read ' + 'package.json'.grey + ' file'
@@ -110,7 +112,13 @@ task.deploy = (ukraine_ip, app_dir, cfg) ->
                 winston.debug 'Sending ' + pkg.name.bold + ' to ' + 'haibu'.grey
                 
                 # Skip fils in `node_modules` directory.
-                filter = (props) -> props.path.indexOf('/node_modules/') is -1
+                filter = (props) ->
+                    props.path.indexOf('/node_modules/') is -1 &&
+                    path.basename(props.path) != '.DS_Store' &&
+                    props.path != "#{app_dir}/node_modules" &&
+                    props.path != "#{app_dir}/.git" &&
+                    props.path != "#{app_dir}/.hg" &&
+                    props.path.indexOf('/.svn/') is -1
 
                 fstream.Reader({ 'path': app_dir, 'type': 'Directory', 'filter': filter })
                 .pipe(tar.Pack({ 'prefix': '.' }))

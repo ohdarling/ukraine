@@ -1,0 +1,55 @@
+#! /bin/sh
+
+### BEGIN INIT INFO
+# Provides:          ukraine
+# Required-Start:    $local_fs $remote_fs $network $syslog
+# Required-Stop:     $local_fs $remote_fs $network $syslog
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Short-Description: starts the ukraine service
+# Description:       starts ukraine using start-stop-daemon
+### END INIT INFO
+
+PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
+UKRAINE=/srv/ukraine/bin/ukraine
+NAME=ukraine
+DESC=ukraine
+FOREVER=`which forever`
+LOG_DIR=/srv/ukraine/logs
+LOG_FILE=$LOG_DIR/$NAME.log
+PID_FILE=$LOG_DIR/$NAME.pid
+FOREVER_OPTS="-a -l $LOG_DIR/forever.log -o $LOG_FILE -e $LOG_FILE --pidFile $PID_FILE"
+USER=nodejs
+
+test -x $FOREVER || exit 0
+test -x $UKRAINE || exit 0
+
+set -e
+
+. /lib/lsb/init-functions
+
+case "$1" in
+  start)
+    log_daemon_msg "Starting ukraine"
+    su -l -c "$FOREVER $FOREVER_OPTS start $UKRAINE" $USER
+    log_end_msg $?
+	;;
+  stop)
+    log_daemon_msg "Stopping ukraine"
+    su -l -c "$FOREVER $FOREVER_OPTS stop $UKRAINE" $USER
+    log_end_msg $?
+    rm -f $PIDFILE
+	;;
+  restart|force-reload)
+    $0 stop && sleep 2 && $0 start
+	;;
+  status)
+	status_of_proc -p $PID_FILE "$NAME"
+	;;
+  *)
+	echo "Usage: $NAME {start|stop|restart|status}" >&2
+	exit 1
+	;;
+esac
+
+exit 0
