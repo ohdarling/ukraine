@@ -4,6 +4,8 @@ path    = require 'path'
 winston = require 'winston'
 Q       = require 'q'
 
+utility = require './utility.coffee'
+
 # CLI output on the default output.
 winston.cli()
 
@@ -133,28 +135,8 @@ Q.fcall(
 # See which apps have been re-spawned from a previous session and update our routes.
 ).then(
     ([ cfg, haibu ]) ->
-        winston.debug 'Updating proxy routing table'
-
-        # Traverse running apps.
-        table = {}
-        save = (app_name, app_port) ->
-            # Are we using non standard port? Else leave it out.
-            port = (if (cfg.proxy_port isnt 80) then ":#{cfg.proxy_port}/" else '')
-            # 'Hostname Only' ProxyTable?
-            if cfg.proxy_hostname_only?
-                table["#{app_name}.#{cfg.proxy_host}#{port}"] = "127.0.0.1:#{app_port}"
-            else
-                table["#{cfg.proxy_host}#{port}#{app_name}/"] = "127.0.0.1:#{app_port}"
-        ( save(app.name, app.port) for app in haibu.running.drone.running() )
-
-        def = Q.defer()
-
-        # Write the routing table.
-        fs.writeFile path.resolve(__dirname, 'routes.json'), JSON.stringify({ 'router': table, 'hostnameOnly': cfg.proxy_hostname_only }, null, 4), (err) ->
-            if err then def.reject err.message
-            else def.resolve cfg
-
-        def.promise
+        utility.update_routes_table cfg
+        
 # OK or bust.
 ).done(
     (cfg) ->

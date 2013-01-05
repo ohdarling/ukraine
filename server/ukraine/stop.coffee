@@ -4,6 +4,8 @@ path    = require 'path'
 winston = require 'winston'
 Q       = require 'q'
 
+utility = require '../utility.coffee'
+
 haibu = require '../../node_modules/haibu/lib/haibu.js' # direct path to local haibu!
 
 # POST stop a running drone.
@@ -24,38 +26,7 @@ haibu.router.post '/drones/:name/stop', {} , (APP_NAME) ->
     # Update the routing table.
     ).then(
         ->
-            winston.debug 'Updating proxy routes'
-
-            routes = path.resolve(__dirname, '../routes.json')
-
-            # Get the current routes.
-            Q.fcall( ->
-                def = Q.defer()
-
-                fs.readFile routes, (err, data) ->
-                    if err then def.reject err
-                    def.resolve JSON.parse data
-
-                def.promise
-            # Update.
-            ).then(
-                (old) ->
-                    # Store the new routes here.
-                    rtr = {}
-                    # Remove the app if present.
-                    for external, internal of old.router
-                        # Save it unless it is our app.
-                        rtr[external] = internal unless external.split('/')[1] is APP_NAME
-                    rtr
-            # Write it.
-            ).when(
-                (rtr) ->
-                    def = Q.defer()
-                    fs.writeFile routes, JSON.stringify({'router': rtr}, null, 4), (err) ->
-                        if err then def.reject err
-                        else def.resolve()
-                    def.promise
-            )
+            utility.update_routes_table()
     # OK or bust.
     ).done(
         ->

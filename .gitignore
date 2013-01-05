@@ -1,4 +1,6 @@
+.DS_Store
 node_modules/
 server/routes.json
 server/env.json
 server/logs/
+
