@@ -28,7 +28,8 @@ update_routes_table = (args) ->
         
         # 'Hostname Only' ProxyTable?
         if CFG.proxy_hostname_only
-            table["#{app_name}.#{CFG.proxy_host}#{port}"] = "127.0.0.1:#{app_port}"
+            hostname = app_name.toLowerCase()
+            table["#{hostname}.#{CFG.proxy_host}#{port}"] = "127.0.0.1:#{app_port}"
         else
             table["#{CFG.proxy_host}#{port}/#{app_name}/"] = "127.0.0.1:#{app_port}"
             
