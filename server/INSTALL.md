@@ -15,6 +15,7 @@ See [Installing Node.js via package manager](https://github.com/joyent/node/wiki
 
     cd /srv
     git clone https://github.com/ohdarling/ukraine
+    git checkout domains-support
     cd ukraine
     npm install
     chown -R nodejs.nodejs /srv/ukraine
@@ -22,7 +23,7 @@ See [Installing Node.js via package manager](https://github.com/joyent/node/wiki
 ## Install init script
 
     cd /srv/ukraine
-    cp server/init.d/ukraine /etc/init.d/
+    cp server/init-script/ukraine /etc/init.d/
     chmod +x /etc/init.d/ukraine
     
 ## Use nginx as frontend
@@ -31,7 +32,7 @@ This needs compile nginx chunkin module first, see <http://wiki.nginx.org/NginxH
 
 	server {
 		listen   80;
-		server_name  haibu.f2e.info;
+		server_name  haibu.example.com;
 		
 		access_log  /var/log/nginx/localhost.access.log;
 
@@ -50,7 +51,7 @@ This needs compile nginx chunkin module first, see <http://wiki.nginx.org/NginxH
 	
 	server {
 		listen   80;
-		server_name  *.f2e.info;
+		server_name  *.example.com;
 		
 		access_log  /var/log/nginx/localhost.access.log;
 		

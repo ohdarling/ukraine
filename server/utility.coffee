@@ -24,7 +24,7 @@ update_routes_table = (args) ->
     
     save = (app_name, app_port) ->
         # Are we using non standard port? Else leave it out.
-        port = (if (CFG.proxy_port isnt 80) then ":#{CFG.proxy_port}" else '')
+        port = (if (CFG.proxy_port is 80 || CFG.omit_haibu_port_when_hostname_only) then '' else ":#{CFG.proxy_port}")
         
         # 'Hostname Only' ProxyTable?
         if CFG.proxy_hostname_only
