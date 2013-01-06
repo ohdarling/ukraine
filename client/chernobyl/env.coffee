@@ -4,6 +4,8 @@ winston = require 'winston'
 request = require 'request'
 Q       = require 'q'
 
+haibu_api   = require './haibu_api.coffee'
+
 task = exports
 
 # Unfortunately, the haibu API only allows to stop apps by name, not by user too.
@@ -62,10 +64,7 @@ task.env = (ukraine_ip, app_dir, key_value, cfg) ->
 
             def = Q.defer()
 
-            request.get
-                'url': "http://#{ukraine_ip}:#{cfg.haibu_port}/version"
-                'headers':
-                    'x-auth-token': cfg.auth_token
+            haibu_api.get ukraine_ip, 'version',
             , (err, res, body) ->
                 if err
                     def.reject err
@@ -83,11 +82,7 @@ task.env = (ukraine_ip, app_dir, key_value, cfg) ->
 
             winston.info 'Trying to send env var for ' + pkg.name.bold
 
-            request
-                'uri': "http://#{ukraine_ip}:#{cfg.haibu_port}/env/#{pkg.name}"
-                'method': 'POST'
-                'headers':
-                    'x-auth-token': cfg.auth_token
+            haibu_api.post_data ukraine_ip, "env/#{pkg.name}",
                 # The data to send.
                 'json':
                     'key': key
@@ -106,10 +101,7 @@ task.env = (ukraine_ip, app_dir, key_value, cfg) ->
 
             def = Q.defer()
 
-            request.get
-                'url': "http://#{ukraine_ip}:#{cfg.haibu_port}/drones/#{pkg.name}"
-                'headers':
-                    'x-auth-token': cfg.auth_token
+            haibu_api.get ukraine_ip, "drones/#{pkg.name}"
             , (err, res, body) ->
                 if err then def.reject err
                 else if res.statusCode isnt 200 then def.reject body

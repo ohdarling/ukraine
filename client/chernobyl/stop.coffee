@@ -4,6 +4,8 @@ winston = require 'winston'
 request = require 'request'
 Q       = require 'q'
 
+haibu_api   = require './haibu_api.coffee'
+
 task = exports
 
 # CLI output on the default output.
@@ -45,10 +47,7 @@ task.stop = (ukraine_ip, app_dir, cfg) ->
 
             def = Q.defer()
 
-            request.get
-                'url': "http://#{ukraine_ip}:#{cfg.haibu_port}/version"
-                'headers':
-                    'x-auth-token': cfg.auth_token
+            haibu_api.get ukraine_ip, 'version'
             , (err, res, body) ->
                 if err
                     def.reject err
@@ -66,11 +65,7 @@ task.stop = (ukraine_ip, app_dir, cfg) ->
 
             winston.info 'Trying to stop ' + pkg.name.bold
 
-            request
-                'uri': "http://#{ukraine_ip}:#{cfg.haibu_port}/drones/#{pkg.name}/stop"
-                'method': 'POST'
-                'headers':
-                    'x-auth-token': cfg.auth_token
+            haibu_api.post ukraine_ip, "draones/#{pkg.name}/stop"
             , (err, res, body) ->
                 if err then def.reject err
                 else if res.statusCode isnt 200 then def.reject body?.error?.message or body
@@ -84,11 +79,8 @@ task.stop = (ukraine_ip, app_dir, cfg) ->
             winston.debug 'Is ' + pkg.name.bold + ' still running?'
 
             def = Q.defer()
-
-            request.get
-                'url': "http://#{ukraine_ip}:#{cfg.haibu_port}/drones/#{pkg.name}"
-                'headers':
-                    'x-auth-token': cfg.auth_token
+            
+            haibu_api.get ukraine_ip, "drones/#{pkg.name}"
             , (err, res, body) ->
                 if err then def.reject err
                 else if res.statusCode isnt 404 then def.reject body

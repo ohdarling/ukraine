@@ -1,6 +1,6 @@
 ## Install nodejs and npm
 
-[Installing Node.js via package manager](https://github.com/joyent/node/wiki/Installing-Node.js-via-package-manager)
+See [Installing Node.js via package manager](https://github.com/joyent/node/wiki/Installing-Node.js-via-package-manager)
 
 ## Install forever
 
@@ -24,8 +24,49 @@
     cd /srv/ukraine
     cp server/init.d/ukraine /etc/init.d/
     chmod +x /etc/init.d/ukraine
+    
+## Use nginx as frontend
 
-## Start
+This needs compile nginx chunkin module first, see <http://wiki.nginx.org/NginxHttpChunkinModule>
+
+	server {
+		listen   80;
+		server_name  haibu.f2e.info;
+		
+		access_log  /var/log/nginx/localhost.access.log;
+
+		chunkin on;
+		
+		error_page 411 = @my_411_error;
+			location @my_411_error {
+			chunkin_resume;
+		}
+		
+		location / {
+			proxy_pass http://localhost:9002;
+			proxy_set_header  X-Real-IP  $remote_addr;
+		}
+	}
+	
+	server {
+		listen   80;
+		server_name  *.f2e.info;
+		
+		access_log  /var/log/nginx/localhost.access.log;
+		
+		location / {
+			proxy_pass http://localhost:8000;
+			proxy_set_header  X-Real-IP  $remote_addr;
+		}
+	}
+
+	
+## Disable direct visit to haibu
+
+	iptables -A INPUT -p tcp --dport 8000 -i venet0 -j DROP
+	iptables -A INPUT -p tcp --dport 9002 -i venet0 -j DROP
+
+## Start ukraine
     
     service ukraine start
     

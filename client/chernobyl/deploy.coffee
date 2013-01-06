@@ -8,6 +8,8 @@ fstream = require 'fstream'
 request = require 'request'
 Q       = require 'q'
 
+haibu_api   = require './haibu_api.coffee'
+
 task = exports
 
 # Unfortunately, the haibu API only allows to stop apps by name, not by user too.
@@ -67,11 +69,8 @@ task.deploy = (ukraine_ip, app_dir, cfg) ->
             winston.debug 'Is ' + 'haibu'.grey + ' up?'
 
             def = Q.defer()
-
-            request.get
-                'url': "http://#{ukraine_ip}:#{cfg.haibu_port}/version"
-                'headers':
-                    'x-auth-token': cfg.auth_token
+            
+            haibu_api.get ukraine_ip, 'version'
             , (err, res, body) ->
                 if err
                     def.reject err
@@ -124,10 +123,7 @@ task.deploy = (ukraine_ip, app_dir, cfg) ->
                 .pipe(tar.Pack({ 'prefix': '.' }))
                 .pipe(zlib.Gzip())
                 .pipe(
-                    request.post
-                        'url': "http://#{ukraine_ip}:#{cfg.haibu_port}/drones/#{pkg.name}/deploy"
-                        'headers':
-                            'x-auth-token': cfg.auth_token
+                    haibu_api.post ukraine_ip, "drones/#{pkg.name}/deploy"
                     , response
                 )
 

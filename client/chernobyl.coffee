@@ -27,6 +27,8 @@ help = ->
     winston.help '  chernobyl env <ukraine_ip> <app_path> <key>="<value>"'
     winston.help 'To authenticate this account'.cyan
     winston.help '  chernobyl auth <ukraine_ip> <auth_key>'
+    winston.help 'To configure cloud hosting'.cyan
+    winston.help '  chernobyl auth <ukraine_ip> <https=true>|<port=80>'
     winston.help ''
 
 # Do we have config available?
@@ -45,7 +47,7 @@ else
 
     # Which task?    
     switch task
-        when 'deploy', 'stop', 'env', 'auth'
+        when 'deploy', 'stop', 'env', 'auth', 'config'
             # Has the user supplied a path to ukraine?
             unless ukraine_ip
                 winston.error "Path to #{'ukraine'.grey} not specified"
@@ -54,8 +56,10 @@ else
                 # Boost config with auth token if available.
                 if fs.existsSync(t = process.env.HOME + '/.chernobyl')
                     try
-                        tokens = JSON.parse fs.readFileSync t
-                        if tokens[ukraine_ip] then cfg.auth_token = tokens[ukraine_ip]
+                        user_config = JSON.parse fs.readFileSync t
+                        if user_config[ukraine_ip]
+                            host_config = user_config[ukraine_ip]
+                            cfg[key] = value for key, value in host_config
                     catch e
                         # Silence!
 
