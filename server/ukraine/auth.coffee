@@ -8,7 +8,7 @@ haibu = require '../../node_modules/haibu/lib/haibu.js' # direct path to local h
 CFG = JSON.parse fs.readFileSync(path.resolve(__dirname, '../../config.json')).toString('utf-8')
 
 # Also define authentication on all requests?
-if CFG.auth_token
+if CFG.auth_token && (CFG.auth_token+'').length > 0
     haibu.router.every.before = ->
         # Allowed.
         if @req.headers['x-auth-token'] is CFG.auth_token

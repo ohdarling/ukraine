@@ -93,7 +93,7 @@ Q.fcall(
         proxy = require 'http-proxy'
 
         # Create a proxy server listening on port 80 routing to apps in a dynamic `routes` file.
-        proxy.createServer('router': path.resolve(__dirname, './routes.json')).listen(cfg.proxy_port)
+        proxy.createServer('router': path.resolve(__dirname, './routes.json')).listen(cfg.proxy_port, cfg.proxy_listen_ip || '')
 
         cfg
 # Spawn haibu.
@@ -110,7 +110,7 @@ Q.fcall(
         haibu.drone.start
             'env': 'development'
             'port': cfg.haibu_port
-            'host': '127.0.0.1'
+            'host': cfg.haibu_listen_ip
         , ->
             def.resolve [ cfg, haibu ]
 
