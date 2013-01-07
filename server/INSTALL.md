@@ -58,6 +58,7 @@ This needs compile nginx chunkin module first, see <http://wiki.nginx.org/NginxH
 		location / {
 			proxy_pass http://localhost:8000;
 			proxy_set_header  X-Real-IP  $remote_addr;
+			proxy_set_header Host $host;
 		}
 	}
 
