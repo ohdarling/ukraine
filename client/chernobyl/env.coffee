@@ -64,7 +64,7 @@ task.env = (ukraine_ip, app_dir, key_value, cfg) ->
 
             def = Q.defer()
 
-            haibu_api.get ukraine_ip, 'version',
+            haibu_api.get ukraine_ip, 'version'
             , (err, res, body) ->
                 if err
                     def.reject err

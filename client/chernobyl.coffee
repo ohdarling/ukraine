@@ -28,7 +28,7 @@ help = ->
     winston.help 'To authenticate this account'.cyan
     winston.help '  chernobyl auth <ukraine_ip> <auth_key>'
     winston.help 'To configure cloud hosting'.cyan
-    winston.help '  chernobyl auth <ukraine_ip> <https=true>|<port=80>'
+    winston.help '  chernobyl config <ukraine_ip> <https=true>|<port=80>|<auth_token=token>'
     winston.help ''
 
 # All config should use 'chernobyl config' to configure
