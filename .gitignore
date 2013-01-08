@@ -4,3 +4,4 @@ server/routes.json
 server/env.json
 server/logs/
 config.json
+logs/
