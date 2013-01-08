@@ -14,8 +14,7 @@ Install the package globally:
 
 .. code-block:: bash
 
-    $ git clone https://github.com/ohdarling/ukraine.git
-    $ git checkout private-cloud
+    $ sudo npm install -g git://github.com/ohdarling/ukraine.git\#private-cloud
 
 Create a ``config.json`` file if not present already in the lib's root:
 
