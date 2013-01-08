@@ -7,7 +7,7 @@ Q       = require 'q'
 # This is where this user stores their auth token.
 CONFIG_PATH = process.env.HOME + '/.chernobyl'
 
-api_request = (host, method, path, data, callback) ->
+api_request = (host, method, path, json, callback) ->
     # Load host config
     user_config = {}
     if fs.existsSync CONFIG_PATH then user_config = JSON.parse fs.readFileSync CONFIG_PATH
@@ -23,7 +23,7 @@ api_request = (host, method, path, data, callback) ->
         'url': url
         'headers':
             'x-auth-token': host_config.auth_token
-    if data? then params['data'] = data
+    if json? then params['json'] = json
     request[method] params, callback
     
 exports.get = (host, path, callback) ->
@@ -32,5 +32,5 @@ exports.get = (host, path, callback) ->
 exports.post = (host, path, callback) ->
     api_request host, 'post', path, null, callback
     
-exports.post_data = (host, path, data, callback) ->
-    api_request host, 'post', path, data, callback
+exports.post_json = (host, path, json, callback) ->
+    api_request host, 'post', path, json, callback

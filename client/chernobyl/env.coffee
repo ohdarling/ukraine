@@ -82,11 +82,10 @@ task.env = (ukraine_ip, app_dir, key_value, cfg) ->
 
             winston.info 'Trying to send env var for ' + pkg.name.bold
 
-            haibu_api.post_data ukraine_ip, "env/#{pkg.name}",
+            haibu_api.post_json ukraine_ip, "env/#{pkg.name}",
                 # The data to send.
-                'json':
-                    'key': key
-                    'value': value
+                'key': key
+                'value': value
             , (err, res, body) ->
                 if err then def.reject err
                 else if res.statusCode isnt 200 then def.reject body?.error?.message or body
