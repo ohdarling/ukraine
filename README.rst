@@ -14,7 +14,8 @@ Install the package globally:
 
 .. code-block:: bash
 
-    $ sudo npm install ukraine -g
+    $ git clone https://github.com/ohdarling/ukraine.git
+    $ git checkout private-cloud
 
 Create a ``config.json`` file if not present already in the lib's root:
 
@@ -22,22 +23,31 @@ Create a ``config.json`` file if not present already in the lib's root:
 
     {
         "haibu_port": 9002,
-        "proxy_port": 80,
+        "haibu_listen_ip": "127.0.0.1",
+        "proxy_port": 8000,
+        "proxy_listen_ip": "127.0.0.1",
         "proxy_host": "127.0.0.1",
-        "auth_token": "abc",
-        "proxy_hostname_only": false
+        "proxy_hostname_only": false,
+        "omit_haibu_port_when_hostname_only": false,
+        "auth_token": ""
     }
 
 haibu_port
     On which port to start the Haibu service.
+haibu_listen_ip
+    On which ip to start the Haibu service, if use nginx as frontend this should be 127.0.0.1
 proxy_port
     Where will all requests go? If set to ``80``, you will be able to access your apps without providing a port number.
+proxy_listen_ip
+    Proxy listen to which ip, if use nginx as frontend, it should be 127.0.0.1
 proxy_host
     What is the host used in the proxy routing table. This is the 'domain' you will be using to access the running apps.
 auth_token
     A token that a client will need to use to access the ukraine service. Leaving this property out will not require you to pass a token and is useful for debugging.
 proxy_hostname_only
     If set to ``true`` your apps will be routed from ``<app_name>.<proxy_host>:<proxy_port>`` instead of ``<proxy_host>:<proxy_port>/<app_name>/``. Useful also in a case when you have links in your app that are root relative.
+omit_haibu_port_when_hostname_only
+    If use nginx as frontend, and nginx listen to port 80, this should be true, or route in http-proxy table will contain a port and cannot match url without a port
 
 As a server
 ~~~~~~~~~~~
@@ -46,7 +56,7 @@ Start it up:
 
 .. code-block:: bash
 
-    $ sudo ukraine
+    $ bin/ukraine
 
 .. note::
     In order to run the server in the background, I recommend you install `forever.js <https://github.com/nodejitsu/forever>`_ and start the service as follows:
@@ -54,7 +64,9 @@ Start it up:
     .. code-block:: bash
 
         $ sudo npm install forever -g
-        $ sudo forever start /usr/local/lib/node_modules/ukraine/bin/ukraine
+        $ forever start bin/ukraine
+        
+On Ubuntu or Debian, there is an init script to start ukraine as a service, see ``server/init-script``, see `INSTALL.md <https://github.com/ohdarling/ukraine/blob/private-cloud/server/INSTALL.md>`_ for detail.
 
 As a client
 ~~~~~~~~~~~
