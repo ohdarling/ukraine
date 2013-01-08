@@ -31,11 +31,8 @@ help = ->
     winston.help '  chernobyl auth <ukraine_ip> <https=true>|<port=80>'
     winston.help ''
 
-# Do we have config available?
-try
-    cfg = JSON.parse fs.readFileSync(path.resolve(__dirname, '../config.json')).toString('utf-8')
-catch e
-    return winston.error e.message
+# All config should use 'chernobyl config' to configure
+cfg = {}
 
 if process.argv.length < 3 then help()
 else
