@@ -106,6 +106,10 @@ It shows haibu started normally.
 
 ## Deploy your node.js app
 
+First need install ukraine to local machine:
+
+    npm install -g git://github.com/ohdarling/ukraine\#private-cloud
+
 If you configured auth_token previously, you should config auth_token first.
 
 	chernobyl config haibu.example.com auth_token=xxxx
@@ -117,7 +121,7 @@ If enabled SSL on haibu, also configure it:
 	
 Now can deploy node.js app:
 
-	chernobyl deploy haibu.example.com 
+	chernobyl deploy haibu.example.com .
 	
 ## Bind custom domain
 
