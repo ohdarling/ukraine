@@ -158,3 +158,20 @@ The nginx configuration also needs modify:
 			proxy_set_header Host $host;
 		}
 	}	
+
+
+## Running node.js app as independent service
+
+Sometimes if you want run a node.js app as independent service such as some socks service, you can set env in package.json:
+
+    {
+        "name" : "somesocks",
+        "scripts" : {
+            "start" : "server.js"
+        },
+        "env" : {
+            "HAIBU_INDEPENDENT_SERVICE" : "true"
+        }
+    }
+
+HAIBU_INDEPENDENT_SERVICE indicates that the node.js can listen to specified ip and port.
