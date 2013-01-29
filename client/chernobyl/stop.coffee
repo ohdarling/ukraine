@@ -13,33 +13,15 @@ winston.cli()
 
 # The actual task.
 task.stop = (ukraine_ip, app_dir, cfg) ->
-    # Read the app's `package.json` file.
     return Q.fcall( ->
-        winston.debug 'Attempting to read ' + 'package.json'.grey + ' file'
-        
-        def = Q.defer()
-        fs.readFile "#{app_dir}/package.json", 'utf-8', (err, text) ->
-            if err then def.reject err
-            else def.resolve text
-        def.promise
-    # JSON parse.
-    ).when(
-        (pkg) ->
-            winston.debug 'Attempting to parse ' + 'package.json'.grey + ' file'
-
-            JSON.parse pkg
-    # App name field.
-    ).when(
-        (pkg) ->
-            winston.debug 'Checking for ' + 'app'.grey + ' field in ' + 'package.json'.grey + ' file'
-
-            # Defined?
-            unless pkg.name and pkg.name.length > 0
-                throw 'name'.grey + ' field needs to be defined in ' + 'package.json'.grey 
-            # Special chars?
-            if encodeURIComponent(pkg.name) isnt pkg.name
-                throw 'name'.grey + ' field in ' + 'package.json'.grey + ' contains characters that are not allowed in a URL'
-            pkg
+        pkg = { name: app_dir }
+        # Defined?
+        unless pkg.name and pkg.name.length > 0
+            throw 'name'.grey + ' field needs to be defined in ' + 'package.json'.grey 
+        # Special chars?
+        if encodeURIComponent(pkg.name) isnt pkg.name
+            throw 'name'.grey + ' field in ' + 'package.json'.grey + ' contains characters that are not allowed in a URL'
+        pkg
     # Is anyone listening?
     ).then(
         (pkg) ->

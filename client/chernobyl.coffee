@@ -22,7 +22,7 @@ help = ->
     winston.help 'To deploy an app into cloud'.cyan
     winston.help '  chernobyl deploy <ukraine_ip> <app_path>'
     winston.help 'To stop an app in the cloud'.cyan
-    winston.help '  chernobyl stop <ukraine_ip> <app_path>'
+    winston.help '  chernobyl stop <ukraine_ip> <app_name>'
     winston.help 'To send an environment variable'.cyan
     winston.help '  chernobyl env <ukraine_ip> <app_path> <key>="<value>"'
     winston.help 'To authenticate this account'.cyan
