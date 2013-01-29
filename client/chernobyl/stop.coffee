@@ -65,7 +65,7 @@ task.stop = (ukraine_ip, app_dir, cfg) ->
 
             winston.info 'Trying to stop ' + pkg.name.bold
 
-            haibu_api.post ukraine_ip, "draones/#{pkg.name}/stop"
+            haibu_api.post ukraine_ip, "drones/#{pkg.name}/stop"
             , (err, res, body) ->
                 if err then def.reject err
                 else if res.statusCode isnt 200 then def.reject body?.error?.message or body
