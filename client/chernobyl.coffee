@@ -29,6 +29,8 @@ help = ->
     winston.help '  chernobyl auth <ukraine_ip> <auth_key>'
     winston.help 'To configure cloud hosting'.cyan
     winston.help '  chernobyl config <ukraine_ip> <https=true>|<port=80>|<auth_token=token>'
+    winston.help 'To list running drones'.cyan
+    winston.help '  chernobyl list <ukraine_ip>'
     winston.help ''
 
 # All config should use 'chernobyl config' to configure
@@ -44,7 +46,7 @@ else
 
     # Which task?    
     switch task
-        when 'deploy', 'stop', 'env', 'auth', 'config'
+        when 'deploy', 'stop', 'env', 'auth', 'config', 'list'
             # Has the user supplied a path to ukraine?
             unless ukraine_ip
                 winston.error "Path to #{'ukraine'.grey} not specified"

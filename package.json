@@ -12,7 +12,8 @@
         "tar" : "git://github.com/radekstepan/node-tar.git#master",
         "fstream" : "0.1.19",
         "request" : "2.12.0",
-        "q" : "0.8.11"
+        "q" : "0.8.11",
+        "dateformat" : "*"
     },
     "bin" : {
         "ukraine" : "./bin/ukraine",
